@@ -18,6 +18,28 @@ async function run() {
     try {
         await client.connect();
         console.log('Database Connected')
+        const informationCollection = client.db('txdap_migration_platform').collection('information');
+
+    //    Sumaya's Code 
+        //  show information 
+       app.get('/information', async(req, res ) =>{
+        const query = {};
+        const cursor = informationCollection.find(query);
+        const informations = await cursor.toArray();
+        res.send(informations);
+       });
+
+       app.get('/information', async(req, res) =>{
+        const informations = await informationCollection.find().toArray();
+        res.send(informations);
+       })
+
+       app.post('/information', async(req, res) =>{
+        const newInformation = req.body;
+        const informations = await informationCollection.insertOne(newInformation);
+        res.send(informations);
+      });
+
     }
     finally {
 
