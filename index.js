@@ -21,7 +21,7 @@ async function run() {
         console.log('Database Connected')
         const informationCollection = client.db('txdap_migration_platform').collection('information');
  
-    //    Sumaya's Code 
+    //    Sumaya's Code Start 
         //  show information 
        app.get('/information', async(req, res ) =>{
         const query = {};
@@ -40,6 +40,8 @@ async function run() {
         const informations = await informationCollection.insertOne(newInformation);
         res.send(informations);
       });
+
+    //   Sumaya's Code Finish 
 
         console.log('Database Connected');
 
