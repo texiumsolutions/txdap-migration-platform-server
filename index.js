@@ -1,7 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const XLSX = require('xlsx')
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -17,7 +18,58 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         await client.connect();
-        console.log('Database Connected')
+        console.log('Database Connected');
+
+
+        const informationCollection = client.db('txdap_migration_platform').collection('information');
+        const uploadFilesCollection = client.db('txdap_migration_platform').collection('files');
+
+        app.get('/information', async (req, res) => {
+            const query = {};
+            const cursor = informationCollection.find(query);
+            const information = await cursor.toArray();
+            res.send(information);
+        });
+
+        app.get('/information/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const information = await informationCollection.findOne(query);
+            res.send(information);
+        });
+
+
+
+        app.get('/upload', async (req, res) => {
+            const query = {};
+            const cursor = uploadFilesCollection.find(query);
+            const uploads = await cursor.toArray();
+            res.send(uploads);
+
+            app.get('/upload/:id', async (req, res) => {
+                const id = req.params.id;
+                const query = { _id: ObjectId(id) };
+                const uploads = await uploadFilesCollection.findOne(query);
+                res.send(uploads);
+            });
+
+        });
+
+        app.post('/upload', async (req, res) => {
+            const uploads = req.body;
+            const result = await uploadFilesCollection.insertOne(uploads);
+            res.send(result);
+
+        });
+
+        app.delete('/upload/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await uploadFilesCollection.deleteOne(query);
+            res.send(result);
+        });
+
+
     }
     finally {
 
