@@ -19,7 +19,7 @@ async function run() {
         await client.connect();
         console.log('Database Connected')
         const informationCollection = client.db('txdap_migration_platform').collection('information');
-
+ 
     //    Sumaya's Code 
         //  show information 
        app.get('/information', async(req, res ) =>{
