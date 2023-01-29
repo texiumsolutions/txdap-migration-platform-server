@@ -19,31 +19,30 @@ async function run() {
     try {
         await client.connect();
         console.log('Database Connected')
-        const informationCollection = client.db('txdap_migration_platform').collection('information');
+        const runCollection = client.db('txdap_migration_platform').collection('information');
  
     //    Sumaya's Code Start 
         //  show information 
-       app.get('/information', async(req, res ) =>{
+       app.get('/run', async(req, res ) =>{
         const query = {};
-        const cursor = informationCollection.find(query);
-        const informations = await cursor.toArray();
-        res.send(informations);
+        const cursor = runCollection.find(query);
+        const runs = await cursor.toArray();
+        res.send(runs);
        });
 
-       app.get('/information', async(req, res) =>{
-        const informations = await informationCollection.find().toArray();
-        res.send(informations);
+       app.get('/run', async(req, res) =>{
+        const runs = await run.find().toArray();
+        res.send(runs);
        })
 
-       app.post('/information', async(req, res) =>{
-        const newInformation = req.body;
-        const informations = await informationCollection.insertOne(newInformation);
-        res.send(informations);
+       app.post('/run', async(req, res) =>{
+        const newRun = req.body;
+        const runs = await runCollection.insertOne(newRun);
+        res.send(runs);
       });
 
     //   Sumaya's Code Finish 
 
-        console.log('Database Connected');
 
 
         const uploadFilesCollection = client.db('txdap_migration_platform').collection('files');
