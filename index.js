@@ -20,45 +20,53 @@ async function run() {
         await client.connect();
         console.log('Database Connected')
         const runCollection = client.db('txdap_migration_platform').collection('information');
- 
-    //    Sumaya's Code Start 
+        const injectionCollection = client.db('txdap_migration_platform').collection('injection');
+
+        //    Sumaya's Code Start 
         //  show information 
-       app.get('/run', async(req, res ) =>{
-        const query = {};
-        const cursor = runCollection.find(query);
-        const runs = await cursor.toArray();
-        res.send(runs);
-       });
+        app.get('/run', async (req, res) => {
+            const query = {};
+            const cursor = runCollection.find(query);
+            const runs = await cursor.toArray();
+            res.send(runs);
+        });
 
-       app.get('/run', async(req, res) =>{
-        const runs = await run.find().toArray();
-        res.send(runs);
-       })
+        app.get('/run', async (req, res) => {
+            const runs = await run.find().toArray();
+            res.send(runs);
+        })
 
-       app.post('/run', async(req, res) =>{
-        const newRun = req.body;
-        const runs = await runCollection.insertOne(newRun);
-        res.send(runs);
-      });
+        // app.post('/run', async (req, res) => {
+        //     const newRun = req.body;
+        //     const runs = await runCollection.insertOne(newRun);
+        //     res.send(runs);
+        // });
 
-    //   Sumaya's Code Finish 
+        //   Sumaya's Code Finish 
 
 
 
         const uploadFilesCollection = client.db('txdap_migration_platform').collection('files');
 
-        app.get('/information', async (req, res) => {
+        app.get('/run', async (req, res) => {
             const query = {};
-            const cursor = informationCollection.find(query);
+            const cursor = runCollection.find(query);
             const information = await cursor.toArray();
             res.send(information);
         });
 
-        app.get('/information/:id', async (req, res) => {
+        app.get('/run/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
-            const information = await informationCollection.findOne(query);
+            const information = await runCollection.findOne(query);
             res.send(information);
+        });
+
+        app.post('/run', async (req, res) => {
+            const injection = req.body;
+            const result = await runCollection.insertOne(injection);
+            res.send(result);
+
         });
 
 
