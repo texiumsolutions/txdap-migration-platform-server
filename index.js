@@ -47,18 +47,18 @@ async function run() {
 
         const uploadFilesCollection = client.db('txdap_migration_platform').collection('files');
 
-        app.get('/information', async (req, res) => {
+        app.get('/run', async (req, res) => {
             const query = {};
-            const cursor = informationCollection.find(query);
-            const information = await cursor.toArray();
-            res.send(information);
+            const cursor = runCollection.find(query);
+            const run = await cursor.toArray();
+            res.send(run);
         });
 
-        app.get('/information/:id', async (req, res) => {
+        app.get('/run/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
-            const information = await informationCollection.findOne(query);
-            res.send(information);
+            const run = await runCollection.findOne(query);
+            res.send(run);
         });
 
 
