@@ -20,6 +20,9 @@ async function run() {
         await client.connect();
         console.log('Database Connected')
         const runCollection = client.db('txdap_migration_platform').collection('information');
+        const updateRunCollection = client.db('txdap_migration_platform').collection('updateRun');
+        const allInformationCollection = client.db('txdap_migration_platform').collection('all_information');
+
  
     //    Sumaya's Code Start 
         //  show information 
@@ -40,6 +43,46 @@ async function run() {
         const runs = await runCollection.insertOne(newRun);
         res.send(runs);
       });
+
+
+        //  show UpdateRun 
+        app.get('/updateRun', async(req, res ) =>{
+            const query = {};
+            const cursor = updateRunCollection.find(query);
+            const updateRuns = await cursor.toArray();
+            res.send(updateRuns);
+           });
+    
+           app.get('/updateRun', async(req, res) =>{
+            const updateRuns = await updateRuns.find().toArray();
+            res.send(updateRuns);
+           })
+    
+           app.post('/updateRun', async(req, res) =>{
+            const newUpdateRun = req.body;
+            const updateRuns = await updateRunCollection.insertOne(newUpdateRun);
+            res.send(updateRuns);
+          });
+
+
+        //  show AllInforamtions 
+        app.get('/all_information', async(req, res ) =>{
+            const query = {};
+            const cursor = allInformationCollection.find(query);
+            const allInformations = await cursor.toArray();
+            res.send(allInformations);
+           });
+    
+           app.get('/all_information', async(req, res) =>{
+            const allInformations = await run.find().toArray();
+            res.send(allInformations);
+           })
+    
+           app.post('/all_information', async(req, res) =>{
+            const newAllInformation = req.body;
+            const allInformations = await allInformationCollection.insertOne(newAllInformation);
+            res.send(allInformations);
+          });
 
     //   Sumaya's Code Finish 
 
