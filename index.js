@@ -9,6 +9,10 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+// var userRoute = require('./userRoute');
+
+// app.use('/', userRoute);
+
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.5ii6xxd.mongodb.net/?retryWrites=true&w=majority`;
 
 
@@ -21,6 +25,7 @@ async function run() {
         console.log('Database Connected')
         const runCollection = client.db('txdap_migration_platform').collection('information');
         const injectionCollection = client.db('txdap_migration_platform').collection('injection');
+        const uploadFilesCollection = client.db('txdap_migration_platform').collection('files');
 
         //    Sumaya's Code Start 
         //  show information 
@@ -31,40 +36,31 @@ async function run() {
             res.send(runs);
         });
 
-        app.get('/run', async (req, res) => {
-            const runs = await run.find().toArray();
+        app.post('/run', async (req, res) => {
+            const newRun = req.body;
+            const runs = await runCollection.insertOne(newRun);
             res.send(runs);
-        })
-
-        // app.post('/run', async (req, res) => {
-        //     const newRun = req.body;
-        //     const runs = await runCollection.insertOne(newRun);
-        //     res.send(runs);
-        // });
+        });
 
         //   Sumaya's Code Finish 
 
-
-
-        const uploadFilesCollection = client.db('txdap_migration_platform').collection('files');
-
-        app.get('/run', async (req, res) => {
-            const query = {};
-            const cursor = runCollection.find(query);
-            const information = await cursor.toArray();
-            res.send(information);
-        });
+        // app.get('/run', async (req, res) => {
+        //     const query = {};
+        //     const cursor = runCollection.find(query);
+        //     const information = await cursor.toArray();
+        //     res.send(information);
+        // });
 
         app.get('/run/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
-            const information = await runCollection.findOne(query);
-            res.send(information);
+            const runs = await runCollection.findOne(query);
+            res.send(runs);
         });
 
-        app.post('/run', async (req, res) => {
+        app.post('/injection', async (req, res) => {
             const injection = req.body;
-            const result = await runCollection.insertOne(injection);
+            const result = await injectionCollection.insertOne(injection);
             res.send(result);
 
         });
