@@ -26,6 +26,7 @@ async function run() {
         const runCollection = client.db('txdap_migration_platform').collection('information');
         const updateRunCollection = client.db('txdap_migration_platform').collection('updateRun');
         const allInformationCollection = client.db('txdap_migration_platform').collection('all_information');
+        const InformationTargetKeyCollection = client.db('txdap_migration_platform').collection('information_target_key');
 
 
         //    Sumaya's Code Start 
@@ -133,6 +134,13 @@ async function run() {
             res.send(run);
         });
 
+        app.get('/run-name/:name', async (req, res) => {
+            const name = req.params.name;
+            const query = { name: name };
+            const run = await runCollection.findOne(query);
+            res.send(run);
+        });
+
 
 
         app.get('/upload', async (req, res) => {
@@ -162,6 +170,20 @@ async function run() {
             const query = { _id: ObjectId(id) };
             const result = await uploadFilesCollection.deleteOne(query);
             res.send(result);
+        });
+
+        app.get('/target-key', async (req, res) => {
+            const query = {};
+            const cursor = InformationTargetKeyCollection.find(query);
+            const target_key = await cursor.toArray();
+            res.send(target_key);
+        });
+
+        app.post('/target-key', async (req, res) => {
+            const target_key = req.body;
+            const result = await InformationTargetKeyCollection.insertOne(target_key);
+            res.send(result);
+
         });
 
 
