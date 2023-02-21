@@ -141,6 +141,13 @@ async function run() {
             res.send(run);
         });
 
+        app.delete('/run/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await runCollection.deleteOne(query);
+            res.send(result);
+        });
+
 
 
         app.get('/upload', async (req, res) => {
@@ -184,6 +191,12 @@ async function run() {
             const result = await InformationTargetKeyCollection.insertOne(target_key);
             res.send(result);
 
+        });
+        app.delete('/target-key/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await InformationTargetKeyCollection.deleteOne(query);
+            res.send(result);
         });
 
 
