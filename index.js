@@ -9,6 +9,10 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+// var userRoute = require('./userRoute');
+
+// app.use('/', userRoute);
+
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.5ii6xxd.mongodb.net/?retryWrites=true&w=majority`;
 
 
@@ -22,69 +26,95 @@ async function run() {
         const runCollection = client.db('txdap_migration_platform').collection('information');
         const updateRunCollection = client.db('txdap_migration_platform').collection('updateRun');
         const allInformationCollection = client.db('txdap_migration_platform').collection('all_information');
+        const InformationTargetKeyCollection = client.db('txdap_migration_platform').collection('information_target_key');
 
- 
-    //    Sumaya's Code Start 
+
+        //    Sumaya's Code Start 
         //  show information 
-       app.get('/run', async(req, res ) =>{
-        const query = {};
-        const cursor = runCollection.find(query);
-        const runs = await cursor.toArray();
-        res.send(runs);
-       });
+        app.get('/run', async (req, res) => {
+            const query = {};
+            const cursor = runCollection.find(query);
+            const runs = await cursor.toArray();
+            res.send(runs);
+        });
 
-       app.get('/run', async(req, res) =>{
-        const runs = await run.find().toArray();
-        res.send(runs);
-       })
+        app.get('/run', async (req, res) => {
+            const runs = await run.find().toArray();
+            res.send(runs);
+        })
 
-       app.post('/run', async(req, res) =>{
-        const newRun = req.body;
-        const runs = await runCollection.insertOne(newRun);
-        res.send(runs);
-      });
+        app.post('/run', async (req, res) => {
+            const newRun = req.body;
+            const runs = await runCollection.insertOne(newRun);
+            res.send(runs);
+        });
 
 
         //  show UpdateRun 
-        app.get('/updateRun', async(req, res ) =>{
+        app.get('/updateRun', async (req, res) => {
             const query = {};
             const cursor = updateRunCollection.find(query);
             const updateRuns = await cursor.toArray();
             res.send(updateRuns);
-           });
-    
-           app.get('/updateRun', async(req, res) =>{
+        });
+
+        app.get('/updateRun', async (req, res) => {
             const updateRuns = await updateRuns.find().toArray();
             res.send(updateRuns);
-           })
-    
-           app.post('/updateRun', async(req, res) =>{
+        })
+
+        app.post('/updateRun', async (req, res) => {
             const newUpdateRun = req.body;
             const updateRuns = await updateRunCollection.insertOne(newUpdateRun);
             res.send(updateRuns);
-          });
+        });
 
 
         //  show AllInforamtions 
-        app.get('/all_information', async(req, res ) =>{
+        app.get('/all_information', async (req, res) => {
             const query = {};
             const cursor = allInformationCollection.find(query);
             const allInformations = await cursor.toArray();
             res.send(allInformations);
-           });
-    
-           app.get('/all_information', async(req, res) =>{
-            const allInformations = await run.find().toArray();
-            res.send(allInformations);
-           })
-    
-           app.post('/all_information', async(req, res) =>{
+        });
+
+        // app.get('/all_information', async (req, res) => {
+        //     const allInformations = await run.find().toArray();
+        //     res.send(allInformations);
+        // })
+
+        app.post('/all_information', async (req, res) => {
             const newAllInformation = req.body;
             const allInformations = await allInformationCollection.insertOne(newAllInformation);
             res.send(allInformations);
-          });
+        });
 
-    //   Sumaya's Code Finish 
+        app.get('/all_information/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const information = await allInformationCollection.findOne(query);
+            res.send(information);
+        });
+
+        app.delete('/all_information/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await allInformationCollection.deleteOne(query);
+            res.send(result);
+        });
+
+        app.put('/all_information/:id', async (req, res) => {
+            const id = req.params.id;
+            const data = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateData = {
+                $set: data,
+            };
+            const result = await allInformationCollection.updateOne(filter, updateData, options);
+            res.send(result);
+        });
+        //   Sumaya's Code Finish 
 
 
 
@@ -102,6 +132,20 @@ async function run() {
             const query = { _id: ObjectId(id) };
             const run = await runCollection.findOne(query);
             res.send(run);
+        });
+
+        app.get('/run-name/:name', async (req, res) => {
+            const name = req.params.name;
+            const query = { name: name };
+            const run = await runCollection.findOne(query);
+            res.send(run);
+        });
+
+        app.delete('/run/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await runCollection.deleteOne(query);
+            res.send(result);
         });
 
 
@@ -132,6 +176,26 @@ async function run() {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const result = await uploadFilesCollection.deleteOne(query);
+            res.send(result);
+        });
+
+        app.get('/target-key', async (req, res) => {
+            const query = {};
+            const cursor = InformationTargetKeyCollection.find(query);
+            const target_key = await cursor.toArray();
+            res.send(target_key);
+        });
+
+        app.post('/target-key', async (req, res) => {
+            const target_key = req.body;
+            const result = await InformationTargetKeyCollection.insertOne(target_key);
+            res.send(result);
+
+        });
+        app.delete('/target-key/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await InformationTargetKeyCollection.deleteOne(query);
             res.send(result);
         });
 
