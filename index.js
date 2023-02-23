@@ -27,6 +27,7 @@ async function run() {
         const updateRunCollection = client.db('txdap_migration_platform').collection('updateRun');
         const allInformationCollection = client.db('txdap_migration_platform').collection('all_information');
         const InformationTargetKeyCollection = client.db('txdap_migration_platform').collection('information_target_key');
+        const sourceDataCollection = client.db('txdap_migration_platform').collection('source_data_collection');
 
 
         //    Sumaya's Code Start 
@@ -120,32 +121,51 @@ async function run() {
 
         const uploadFilesCollection = client.db('txdap_migration_platform').collection('files');
 
-        app.get('/run', async (req, res) => {
+        // app.get('/run', async (req, res) => {
+        //     const query = {};
+        //     const cursor = runCollection.find(query);
+        //     const run = await cursor.toArray();
+        //     res.send(run);
+        // });
+
+        // app.get('/run/:id', async (req, res) => {
+        //     const id = req.params.id;
+        //     const query = { _id: ObjectId(id) };
+        //     const run = await runCollection.findOne(query);
+        //     res.send(run);
+        // });
+
+        // app.get('/run-name/:name', async (req, res) => {
+        //     const name = req.params.name;
+        //     const query = { name: name };
+        //     const run = await runCollection.findOne(query);
+        //     res.send(run);
+        // });
+
+        // app.delete('/run/:id', async (req, res) => {
+        //     const id = req.params.id;
+        //     const query = { _id: ObjectId(id) };
+        //     const result = await runCollection.deleteOne(query);
+        //     res.send(result);
+        // });
+
+        // Source data collection
+        app.get('/source', async (req, res) => {
             const query = {};
-            const cursor = runCollection.find(query);
-            const run = await cursor.toArray();
-            res.send(run);
+            const cursor = sourceDataCollection.find(query);
+            const source = await cursor.toArray();
+            res.send(source);
         });
 
-        app.get('/run/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const run = await runCollection.findOne(query);
-            res.send(run);
-        });
 
-        app.get('/run-name/:name', async (req, res) => {
-            const name = req.params.name;
-            const query = { name: name };
-            const run = await runCollection.findOne(query);
+        app.get('/source/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = {
+                email:
+                    email
+            };
+            const run = await sourceDataCollection.findOne(query);
             res.send(run);
-        });
-
-        app.delete('/run/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const result = await runCollection.deleteOne(query);
-            res.send(result);
         });
 
 
