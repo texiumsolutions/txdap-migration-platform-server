@@ -26,6 +26,8 @@ async function run() {
         const runCollection = client.db('txdap_migration_platform').collection('information');
         const updateRunCollection = client.db('txdap_migration_platform').collection('updateRun');
         const allInformationCollection = client.db('txdap_migration_platform').collection('all_information');
+        const profileCollection = client.db('txdap_migration_platform').collection('profile_collection');
+
         const InformationTargetKeyCollection = client.db('txdap_migration_platform').collection('information_target_key');
         const sourceDataCollection = client.db('txdap_migration_platform').collection('source_data_collection');
 
@@ -72,22 +74,18 @@ async function run() {
 
 
         //  show AllInforamtions 
-        app.get('/all_information', async (req, res) => {
+        app.get('/profile', async (req, res) => {
             const query = {};
-            const cursor = allInformationCollection.find(query);
-            const allInformations = await cursor.toArray();
-            res.send(allInformations);
+            const cursor = profileCollection.find(query);
+            const allProfiles = await cursor.toArray();
+            res.send(allProfiles);
         });
 
-        // app.get('/all_information', async (req, res) => {
-        //     const allInformations = await run.find().toArray();
-        //     res.send(allInformations);
-        // })
 
-        app.post('/all_information', async (req, res) => {
+        app.post('/profile', async (req, res) => {
             const newAllInformation = req.body;
-            const allInformations = await allInformationCollection.insertOne(newAllInformation);
-            res.send(allInformations);
+            const allProfile = await profileCollection.insertOne(newAllInformation);
+            res.send(allProfile);
         });
 
         app.get('/all_information/:id', async (req, res) => {
@@ -199,11 +197,17 @@ async function run() {
             res.send(result);
         });
 
-        app.get('/target-key', async (req, res) => {
+        // app.get('/target-key', async (req, res) => {
+        //     const query = {};
+        //     const cursor = InformationTargetKeyCollection.find(query);
+        //     const target_key = await cursor.toArray();
+        //     res.send(target_key);
+        // });
+        app.get('/profile', async (req, res) => {
             const query = {};
-            const cursor = InformationTargetKeyCollection.find(query);
-            const target_key = await cursor.toArray();
-            res.send(target_key);
+            const cursor = profileCollection.find(query);
+            const profile_key = await cursor.toArray();
+            res.send(profile_key);
         });
 
         app.post('/target-key', async (req, res) => {
