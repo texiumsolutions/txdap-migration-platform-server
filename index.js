@@ -119,33 +119,33 @@ async function run() {
 
         const uploadFilesCollection = client.db('txdap_migration_platform').collection('files');
 
-        // app.get('/run', async (req, res) => {
-        //     const query = {};
-        //     const cursor = runCollection.find(query);
-        //     const run = await cursor.toArray();
-        //     res.send(run);
-        // });
+        app.get('/run', async (req, res) => {
+            const query = {};
+            const cursor = runCollection.find(query);
+            const run = await cursor.toArray();
+            res.send(run);
+        });
 
-        // app.get('/run/:id', async (req, res) => {
-        //     const id = req.params.id;
-        //     const query = { _id: ObjectId(id) };
-        //     const run = await runCollection.findOne(query);
-        //     res.send(run);
-        // });
+        app.get('/run/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const run = await runCollection.findOne(query);
+            res.send(run);
+        });
 
-        // app.get('/run-name/:name', async (req, res) => {
-        //     const name = req.params.name;
-        //     const query = { name: name };
-        //     const run = await runCollection.findOne(query);
-        //     res.send(run);
-        // });
+        app.get('/run-name/:name', async (req, res) => {
+            const name = req.params.name;
+            const query = { name: name };
+            const run = await runCollection.findOne(query);
+            res.send(run);
+        });
 
-        // app.delete('/run/:id', async (req, res) => {
-        //     const id = req.params.id;
-        //     const query = { _id: ObjectId(id) };
-        //     const result = await runCollection.deleteOne(query);
-        //     res.send(result);
-        // });
+        app.delete('/run/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await runCollection.deleteOne(query);
+            res.send(result);
+        });
 
         // Source data collection
         app.get('/source', async (req, res) => {
